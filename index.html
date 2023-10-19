@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            
+          text-align: center; 
+        }
+         #task {
+            padding: 10px;
+            border: 1px solid #9e9d9d;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: 300px; /* Adjust the width as needed */
+           text-align: center;
+          
+           
+        }
+        
+        .details {
+            flex: 1;
+            font-size: 16px;
+            color: #333;
+        }
+        .items {
+            border: 1px solid #9f9d9d;
+            border-radius: 5px;
+            margin-top: 35px !important;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            width: 50%;
+            margin: auto;
+            
+        }
+
+        .details {
+            flex: 1;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+        }
+
+        .option button {
+            margin-left: 10px;
+            cursor: pointer;
+            color: rgb(0, 0, 0);
+            padding: 5px 10px;
+            border: 1px solid rgb(0, 0, 0);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" onchange="addTask()" id="task" placeholder="Enter task">
+    <div id="list">
+
+       
+
+    </div>  
+
+
+    <script>
+        async function getTodo(){
+            const task=await fetch("http://localhost:3003/api/gettask")
+            // console.log(task);
+            const data=await task.json();
+            console.log(data);
+            s="";
+            data.map(dt=>{
+                s+=`<div class="items">
+            <div class="details">
+                ${dt.task}
+            </div>
+            <div class="option">
+                <button onclick="change('${dt._id}')">edit</button>
+        <button onclick="change('${dt._id}')">delete</button>
+            </div>
+        </div>`
+            })
+            document.getElementById("list").innerHTML=s
+        }
+        getTodo();
+        let data=document.getElementById("task")
+        function addTask()
+         {
+           let task=data.value;
+           fetch("http://localhost:3003/api/addtask",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({task})
+        }).then(()=>{
+            alert("Task Added");
+        }).catch("Error")
+        getTodo();
+        data.value="";
+        }
+
+    function change(id){
+        value=id
+        alert(value)
+    }
+        
+     
+        
+    </script>
+</body>
+</html>
